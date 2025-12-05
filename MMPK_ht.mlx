@@ -1,0 +1,46 @@
+syms t c1 c2
+
+% Parametrit
+T_A = 100; T_B = 100;
+S_0 = [0;1];
+V_AB = 1; V_BA = 1;
+V_Ap = 5; V_Bp = 5;
+V_Am = 5; V_Bm = 5;
+K_A = 1/10; K_B = 1/10;
+
+% Matriisi ja b-vektori
+A = [-(V_AB + V_Am)/T_A,   V_BA/T_B;
+       V_AB/T_A,          -(V_BA + V_Bm)/T_B];
+b = [V_ApK_A; V_BpK_B];
+
+% Epähomogeenisen osan yksittäisratkaisu
+S_P = -A\b;
+
+% Ominaisarvot ja -vektorit
+[V, D] = eig(A);
+lambda1 = D(1,1);
+lambda2 = D(2,2);
+v1 = V(:,1);
+v2 = V(:,2);
+
+% Homogeeninen yleinen ratkaisu
+S_H(t) = c1v1exp(lambda1t)+c2v2exp(lambda2t);
+
+% Ratkaistaan c1 ja c2 alkuarvojen perusteella
+sol = solve(S_H(0) == S_0 - S_P, [c1, c2]);
+c1value = double(sol.c1);
+c2value = double(sol.c2);
+
+% Kokonaisratkaisu
+S_total = S_P + c1valuev1exp(lambda1t) + c2valuev2exp(lambda2t);
+
+% Piirretään kuva
+fplot(S_total(1), [0 100], 'LineWidth', 1.5); hold on
+fplot(S_total(2), [0 100], 'LineWidth', 1.5);
+plot(0, S_0(1), 'o') 
+plot(0, S_0(2), 'o')
+xlabel('t (min)')
+ylabel('S(t) [kg]')
+legend('Säiliö A','Säiliö B','S_A(0)','S_B(0)')
+grid on
+hold off
