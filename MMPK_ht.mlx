@@ -34,6 +34,10 @@ c2value = double(sol.c2);
 % Kokonaisratkaisu
 S_total = S_P + c1valuev1exp(lambda1t) + c2valuev2exp(lambda2t);
 
+% Ratkaisujen pyöristetyt arvot
+S_H_rounded = vpa(S_H(t), 4)
+S_total_rounded = vpa(S_total, 4)
+
 % Piirretään kuva
 fplot(S_total(1), [0 100], 'LineWidth', 1.5); hold on
 fplot(S_total(2), [0 100], 'LineWidth', 1.5);
